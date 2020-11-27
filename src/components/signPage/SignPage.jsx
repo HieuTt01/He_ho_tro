@@ -5,7 +5,7 @@ function Index(props) {
   return (
     <div>
       <Link to="/login">
-        <Button type="primary">Login</Button>
+        <button className="btn-action">Login</button>
       </Link>
     </div>
   );

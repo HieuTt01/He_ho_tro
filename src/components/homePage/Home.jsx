@@ -49,7 +49,9 @@ function Slider(props) {
           checkedChildren="Dark"
           unCheckedChildren="Light"
         />
-        <Button type="primary">Logout</Button>
+        <button className="btn-action" className="btn-action">
+          Logout
+        </button>
         {/* <br />
         <br /> */}
       </Row>

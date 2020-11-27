@@ -14,13 +14,19 @@ export default function login(props) {
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
+
+  function onCancel() {
+    props.history.goBack();
+  }
   return (
     <div>
       <Modal
         title="Login"
         visible={true}
         // onOk={this.handleOk}
-        // onCancel={this.handleCancel}
+        onCancel={() => {
+          onCancel();
+        }}
         footer={null}
       >
         <Form

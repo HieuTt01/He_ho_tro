@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { Button, Row, Col, Table, Space } from "antd";
 import Column from "antd/lib/table/Column";
@@ -18,6 +18,14 @@ function DataPage(props) {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isOpenDialog, setIsOpenDialog] = useState(false);
+  const [user, setUser] = useState([]);
+
+  useEffect(() => {
+    fetch("https://5fbf1c495923c90016e6b8b5.mockapi.io/api/employee/")
+      .then((res) => res.json())
+      .then((data) => setUser(data));
+  }, []);
+
   const columns = [
     {
       title: "Name",
@@ -118,7 +126,7 @@ function DataPage(props) {
             rowKey="id"
             rowSelection={rowSelection}
             columns={columns}
-            dataSource={data}
+            dataSource={user}
           ></Table>
         </Col>
       </Row>
