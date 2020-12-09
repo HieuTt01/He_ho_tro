@@ -56,3 +56,7 @@ body {
   transform: scaleX(1.4) scaleY(1.6);
   opacity: 0;
 }
+.control{
+  padding: 2rem 0 0 0;
+  justify-content: space-between;
+}

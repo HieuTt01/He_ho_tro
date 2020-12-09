@@ -1,12 +1,23 @@
 import React from "react";
 import { Button, Form, Input } from "antd";
 import Modal from "antd/lib/modal/Modal";
+import firebase from '../../firebase';
+import { UserOutlined, LockOutlined } from '@ant-design/icons';
 
 export default function login(props) {
   const tailLayout = {
     wrapperCol: { offset: 8, span: 16 },
   };
   const onFinish = (values) => {
+    firebase
+      .auth()
+      .signInWithEmailAndPassword(values.email, values.password)
+      .then(signedInUser => {
+        console.log(signedInUser);
+      })
+      .catch(err => {
+        console.log(err);
+      })
     console.log("Success:", values);
     props.history.push("/home");
   };
@@ -36,24 +47,25 @@ export default function login(props) {
           onFinishFailed={onFinishFailed}
         >
           <Form.Item
-            label="Username"
-            name="username"
-            rules={[{ required: true, message: "Please input your username!" }]}
+            name="email"
+            rules={[{ required: true, message: "Please input your email!" }]}
           >
-            <Input />
+            <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Email" />
           </Form.Item>
 
           <Form.Item
-            label="Password"
             name="password"
             rules={[{ required: true, message: "Please input your password!" }]}
           >
-            <Input.Password />
+            <Input.Password  prefix={<LockOutlined className="site-form-item-icon"/>}  placeholder="Password" />
           </Form.Item>
           <Form.Item {...tailLayout}>
+          <div >
             <Button type="primary" htmlType="submit">
               Submit
             </Button>
+            <div className="control">Or register now? <a href="/register">Register</a></div>
+          </div>
           </Form.Item>
         </Form>
       </Modal>
