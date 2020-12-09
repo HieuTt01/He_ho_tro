@@ -101,7 +101,7 @@ function DataPage(props) {
       <Row>
         <Col span={24}>
           <Button type="primary" onClick={() => setIsOpenDialog(true)}>
-            Add
+            Choose a file
           </Button>
           <h2>Data page</h2>
         </Col>

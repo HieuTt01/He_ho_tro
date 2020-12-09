@@ -1,10 +1,12 @@
-import React from "react";
-import { Button, Form, Input } from "antd";
+import React, { useState } from 'react';
+import { Button, Form, Input, message } from "antd";
 import Modal from "antd/lib/modal/Modal";
 import firebase from '../../firebase';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 
-export default function login(props) {
+export default function Login(props) {
+  
+  const [loading, setLoading] = useState(false);
   const tailLayout = {
     wrapperCol: { offset: 8, span: 16 },
   };
@@ -13,16 +15,19 @@ export default function login(props) {
       .auth()
       .signInWithEmailAndPassword(values.email, values.password)
       .then(signedInUser => {
-        console.log(signedInUser);
+        setLoading(true);
+        // console.log(signedInUser);
       })
       .catch(err => {
+        setLoading(false);
         console.log(err);
       })
-    console.log("Success:", values);
-    props.history.push("/home");
+    // console.log("Success:", values);
+    // props.history.push("/home");
   };
 
   const onFinishFailed = (errorInfo) => {
+    message.error(errorInfo);
     console.log("Failed:", errorInfo);
   };
 
@@ -61,8 +66,8 @@ export default function login(props) {
           </Form.Item>
           <Form.Item {...tailLayout}>
           <div >
-            <Button type="primary" htmlType="submit">
-              Submit
+            <Button loading={loading} type="primary" htmlType="submit">
+              Login
             </Button>
             <div className="control">Or register now? <a href="/register">Register</a></div>
           </div>

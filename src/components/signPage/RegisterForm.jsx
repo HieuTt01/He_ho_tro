@@ -1,31 +1,51 @@
-import React from 'react';
-import { Button, Form, Input } from "antd";
+import React, { useState } from 'react';
+import { Button, Form, Input, message } from "antd";
 import Modal from "antd/lib/modal/Modal";
 import firebase from '../../firebase';
-import { UserOutlined, LockOutlined, CheckCircleOutlined } from '@ant-design/icons';
+import { UserOutlined, LockOutlined, CheckCircleOutlined, MailOutlined } from '@ant-design/icons';
 
-export default function login(props) {
-  // const [errors, setErrors] = useState('');
+
+export default function Register(props) {
+  // const [isloadUser , setIsloaduser] = useState(false);
+  const [loading, setLoading] = useState(false);
+  
 
   const tailLayout = {
     wrapperCol: { offset: 8, span: 16 },
   };
   const onFinish = (values) => {
+    console.log(values);
     if (isPasswordValid(values.password, values.repassword)) {
+      setLoading(true);
       firebase
         .auth()
         .createUserWithEmailAndPassword(values.email, values.password)
         .then(createdUser => {
-          console.log(createdUser);
-          props.history.push("/login");
+          createdUser.user.updateProfile({
+            displayName: values.username
+          })
+            .then(() => {
+              setLoading(false);
+              saveUser(createdUser).then(() => {
+                console.log("user saved")
+              })
+            })
+          message.success('Account created successfully!');
         })
         .catch(err => {
           console.log(err);
+          setLoading(false);
         })
     } else {
       console.log("Password is invalid!")
     }
   };
+  const saveUser = createdUser => {
+    return firebase.database().ref('users').child(createdUser.user.uid).set({
+      name: createdUser.user.displayName
+    });
+  }
+
   const isPasswordValid = (password, repassword) => {
     if (password.length < 6 || repassword.length < 6) {
       // setErrors("Password should be at least 6 characters!");
@@ -70,8 +90,16 @@ export default function login(props) {
               message: 'The input is not valid E-mail!',
             }, { required: true, message: "Please input your email!" }]}
           >
-            <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Email" />
+            <Input prefix={<MailOutlined className="site-form-item-icon" />} placeholder="Email" />
           </Form.Item>
+
+          <Form.Item
+            name="username"
+            rules={[{ required: true, message: "Please input your username!" }]}
+          >
+            <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Username" />
+          </Form.Item>
+
           <Form.Item
             name="password"
             rules={[{ required: true, message: "Please input your password!" }
@@ -88,7 +116,7 @@ export default function login(props) {
           </Form.Item>
           <Form.Item {...tailLayout}>
             <div>
-              <Button type="primary" htmlType="submit">
+              <Button loading={loading} type="primary" htmlType="submit">
                 Submit
             </Button>
               <div className="control">Back to login? <a href="/login">Login</a></div>
